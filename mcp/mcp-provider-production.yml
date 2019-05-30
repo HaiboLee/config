@@ -1,0 +1,63 @@
+spring:
+  rabbitmq:
+    host: 10.8.29.53
+    port: 5672
+    username: mcp
+    password: 123456
+  zipkin:
+    base-url: http://mcp-monitor
+    sender:
+      type: WEB
+  sleuth:
+    sampler:
+      probability: 1.0
+  datasource:
+    name: test
+    url: jdbc:mysql://10.8.27.70:3306/mcp?verifyServerCertificate=false&useSSL=false&requireSSL=false
+    username: root
+    password: eastcom
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+logging:
+  level:
+    root: info
+    com.eastcom.mcp.provider: debug
+security:
+  oauth2:
+    resource:
+      user-info-uri: http://gateway.mcp.svc.cluster.local:8020/uaa/user
+      prefer-token-info: false
+    client:
+      access-token-uri: http://gateway.mcp.svc.cluster.local:8020/uaa/oauth/token
+      client-id: microservice
+      client-secret: webApp   
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.eastcom.mcp.provider.entity
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - bus-refresh
+        - hystrix.stream
+        - info
+        - health

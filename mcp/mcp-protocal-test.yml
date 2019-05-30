@@ -1,0 +1,39 @@
+spring:
+  rabbitmq:
+    host: 10.8.29.53
+    port: 5672
+    username: mcp
+    password: 123456
+  zipkin:
+    base-url: http://mcp-monitor
+    sender:
+      type: WEB
+  sleuth:
+    sampler:
+      probability: 1.0
+zuul:
+  sensitive-headers: Cookie,Set-Cookie
+  ignored-services: '*'
+  routes:
+    api:
+      path: /**
+      strip-prefix: true
+      sensitiveHeaders: null
+      serviceId: mcp-policy
+      
+ribbon:
+  ReadTimeout: 30000
+  ConnectTimeout: 30000
+  
+logging:
+  level:
+    root: DEBUG
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - bus-refresh
+        - hystrix.stream
+        - info
+        - health

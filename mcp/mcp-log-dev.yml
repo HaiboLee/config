@@ -1,0 +1,85 @@
+# Spring配置
+spring:
+    zipkin:
+      base-url: http://mcp-monitor
+      sender:
+        type: web
+    sleuth:
+      sampler:
+        probability: 1.0 
+    rabbitmq:
+        host: 10.8.29.53
+        port: 5672
+        username: mcp
+        password: 123456
+    datasource:
+        name: test
+        url: jdbc:mysql://10.8.27.70:3306/mcp?verifyServerCertificate=false&useSSL=false&requireSSL=false
+        username: root
+        password: eastcom
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        filters: stat
+        maxActive: 20
+        initialSize: 1
+        maxWait: 60000
+        minIdle: 1
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxOpenPreparedStatements: 20
+    redis:
+        database: 0
+        host: 10.8.29.52
+        port: 6379
+        password: AS@redis
+        expireMinutes: 2
+        jedis:
+            pool:
+                max-active: 1000
+                max-idle: 100
+                min-idle: 1
+                max-wait: -1
+
+# 日志配置
+logging:
+  level:
+    com.eastcom.mcp.log: debug
+    
+# Security配置
+security:
+  oauth2:
+    resource:
+      user-info-uri: http://10.8.29.41:8020/uaa/user
+      prefer-token-info: false
+    client:
+      access-token-uri: http://10.8.29.41:8020/uaa/oauth/token
+      client-id: microservice
+      client-secret: webApp
+
+# Mybatis配置     
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.eastcom.mcp.log.entity
+
+# pagehelper分页插件
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  
+# 暴露刷新配置端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - "bus-refresh"
+        - "hystrix.stream" #hystrix监控端点
+        - "info" #info端点展示微服务基本信息，可以在配置文件中以info
+        - "health" #微服务健康检查端点

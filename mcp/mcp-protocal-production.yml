@@ -1,0 +1,43 @@
+spring:
+  rabbitmq:
+    host: 10.8.29.53
+    port: 5672
+    username: mcp
+    password: 123456
+  zipkin:
+    base-url: http://mcp-monitor
+    sender:
+      type: WEB
+  sleuth:
+    sampler:
+      probability: 0
+      
+  cloud:
+    gateway:
+      routes:
+      - id: protocal
+        uri: lb://mcp-policy
+        predicates:
+        - Path=/**
+        filters:
+        - AddRequestHeader=X-Request-Foo, Bar
+        - name: Hystrix
+          args:
+            name: fallbackController
+            fallbackUri: forward:/fallback
+
+ribbon:
+  eager-load:
+    enabled: true
+logging:
+  level:
+    root: INFO
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - bus-refresh
+        - hystrix.stream
+        - info
+        - health

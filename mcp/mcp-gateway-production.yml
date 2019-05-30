@@ -1,0 +1,128 @@
+spring:
+  zipkin:
+    base-url: http://mcp-monitor
+    sender:
+      type: WEB
+  sleuth:
+    sampler:
+      probability: 1.0
+  rabbitmq:
+    host: 10.8.29.53
+    port: 5672
+    username: mcp
+    password: 123456
+zuul:
+  host:
+    max-total-connections: 100000
+    max-per-route-connections: 10000
+    connect-timeout-millis: 5000
+    socket-timeout-millis: 5000
+  semaphore:
+    max-semaphores: 1000
+  sensitive-headers: Cookie,Set-Cookie
+  routes:
+    uaa:
+      path: /uaa/**
+      strip-prefix: true
+      sensitiveHeaders: null
+      serviceId: mcp-authentication
+    mcp-resource:
+      path: /mcp-resource/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-maintenance
+    mcp-dictionary:
+      path: /mcp-dictionary/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-maintenance
+    mcp-role:
+      path: /mcp-role/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-maintenance  
+    mcp-backup:
+      path: /mcp-backup/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-maintenance
+    mcp-alarm:
+      path: /mcp-alarm/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-maintenance
+    mcp-log:
+      path: /mcp-log/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-maintenance
+    mcp-job:
+      path: /mcp-job/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-maintenance
+    mcp-user:
+      path: /mcp-user/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-maintenance
+    mcp-application:
+      path: /mcp-application/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-operation
+    mcp-api:
+      path: /mcp-api/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-operation
+    mcp-scene:
+      path: /mcp-scene/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-operation
+    mcp-provider:
+      path: /mcp-provider/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-operation
+    mcp-consumer:
+      path: /mcp-consumer/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-operation
+    mcp-statistics:
+      path: /mcp-statistics/**
+      strip-prefix: true   
+      sensitiveHeaders: null
+      serviceId: mcp-operation
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+logging:
+  level:
+    root: INFO
+security:
+  oauth2:
+    client:
+      access-token-uri: http://gateway.mcp.svc.cluster.local:8020/uaa/oauth/token
+      user-authorization-uri: http://gateway.mcp.svc.cluster.local:8020/uaa/oauth/authorize
+    resource:
+      user-info-uri: http://gateway.mcp.svc.cluster.local:8020/uaa/user
+      prefer-token-info: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - bus-refresh
+        - hystrix.stream
+        - info
+        - health
+ribbon:
+  eager-load:
+    enabled: true

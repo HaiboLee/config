@@ -1,0 +1,114 @@
+spring:
+  zipkin:
+    base-url: http://mcp-monitor
+    sender:
+      type: WEB
+  sleuth:
+    sampler:
+      probability: 1.0
+  rabbitmq:
+    host: 10.8.29.53
+    port: 5672
+    username: mcp
+    password: 123456
+zuul:
+  host:
+    connect-timeout-millis: 5000
+    socket-timeout-millis: 5000
+  sensitive-headers: Cookie,Set-Cookie
+  routes:
+    uaa:
+      path: /uaa/**
+      strip-prefix: true
+      sensitiveHeaders: null
+      serviceId: mcp-authentication
+    mcp-user:
+      path: /mcp-user/**
+      strip-prefix: true
+      service-id: mcp-maintenance
+    mcp-resource:
+      path: /mcp-resource/**
+      strip-prefix: true
+      service-id: mcp-maintenance
+    mcp-job:
+      path: /mcp-job/**
+      strip-prefix: true
+      service-id: mcp-maintenance
+    mcp-log:
+      path: /mcp-log/**
+      strip-prefix: true
+      service-id: mcp-maintenance
+    mcp-alarm:
+      path: /mcp-alarm/**
+      strip-prefix: true
+      service-id: mcp-maintenance
+    mcp-backup:
+      path: /mcp-backup/**
+      strip-prefix: true
+      service-id: mcp-maintenance
+    mcp-dictionary:
+      path: /mcp-dictionary/**
+      strip-prefix: true
+      service-id: mcp-maintenance
+    mcp-role:
+      path: /mcp-role/**
+      strip-prefix: true
+      service-id: mcp-maintenance
+      
+      
+      
+    mcp-consumer:
+      path: /mcp-consumer/**
+      strip-prefix: true
+      service-id: mcp-operation
+    mcp-provider:
+      path: /mcp-provider/**
+      strip-prefix: true
+      service-id: mcp-operation
+    mcp-application:
+      path: /mcp-application/**
+      strip-prefix: true
+      service-id: mcp-operation
+    mcp-statistics:
+      path: /mcp-statistics/**
+      strip-prefix: true
+      service-id: mcp-operation
+    mcp-monitor:
+      path: /mcp-monitor/**
+      strip-prefix: true
+      service-id: mcp-operation
+    mcp-scene:
+      path: /mcp-scene/**
+      strip-prefix: true
+      service-id: mcp-operation
+    mcp-api:
+      path: /mcp-api/**
+      strip-prefix: true
+      service-id: mcp-operation
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+logging:
+  level:
+    root: INFO
+security:
+  oauth2:
+    client:
+      access-token-uri: http://10.8.29.41:8020/uaa/oauth/token
+      user-authorization-uri: http://10.8.29.41:8020/uaa/oauth/authorize
+    resource:
+      user-info-uri: http://10.8.29.41:8020/uaa/user
+      prefer-token-info: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - bus-refresh
+        - hystrix.stream
+        - info
+        - health
